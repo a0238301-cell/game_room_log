@@ -579,7 +579,7 @@ function render(){
     const badgeClass = "type-"+(TYPE_COLORS[type] ? type : "default");
     const img = r["封面圖網址"];
     const note = (r["心得筆記"]||"").trim();
-    const needsToggle = note && (note.includes("\n") || note.length>50);
+    const needsToggle = note && (/[\n\r\u2028\u2029]/.test(note) || note.length>50);
     const preview = note ? makePreview(note) : "";
     return `
     <div class="card ${isPending?'pending':''}" id="card-${i}">
@@ -615,7 +615,7 @@ function render(){
   });
 }
 function makePreview(note){
-  const oneLine = note.replace(/\n+/g," ").trim();
+  const oneLine = note.replace(/[\n\r\u2028\u2029]+/g," ").replace(/\s+/g," ").trim();
   return oneLine.length>50 ? oneLine.slice(0,50)+"…" : oneLine;
 }
 function escapeHtml(s){
