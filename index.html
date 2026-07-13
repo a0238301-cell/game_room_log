@@ -36,11 +36,12 @@
   }
   .mono{font-family:'JetBrains Mono',monospace;}
   .serif{font-family:'Noto Serif TC',serif;}
+  a{color:inherit;}
 
-  /* ---------- HERO (封面) ---------- */
+  /* ---------- HERO ---------- */
   .hero{
     position:relative;
-    padding:72px 24px 96px;
+    padding:64px 24px 40px;
     text-align:center;
     background:
       radial-gradient(ellipse at 50% -10%, rgba(176,141,87,0.18), transparent 60%),
@@ -73,15 +74,16 @@
   .hero p.sub{
     color:var(--paper-200);
     max-width:520px;
-    margin:0 auto 36px;
+    margin:0 auto 32px;
     line-height:1.8;
     font-size:15px;
   }
   .stamp-row{
     display:flex;
     justify-content:center;
-    gap:14px;
+    gap:20px;
     flex-wrap:wrap;
+    margin-bottom:34px;
   }
   .stamp-count{
     position:relative;
@@ -89,27 +91,85 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    width:150px;
-    height:150px;
+    width:140px;
+    height:140px;
     border:3px double var(--stamp-red);
     border-radius:50%;
     color:var(--stamp-red);
     transform:rotate(-7deg);
     background:rgba(176,64,58,0.05);
   }
+  .stamp-count.pending{
+    border-style:dashed;
+    border-color:var(--brass);
+    color:var(--brass);
+    transform:rotate(6deg);
+    background:rgba(176,141,87,0.05);
+  }
   .stamp-count .num{
     font-family:'Noto Serif TC',serif;
     font-weight:900;
-    font-size:42px;
+    font-size:38px;
     line-height:1;
   }
   .stamp-count .label{
-    font-size:11px;
-    letter-spacing:0.2em;
+    font-size:10.5px;
+    letter-spacing:0.18em;
     margin-top:6px;
   }
+
+  /* 下一站 callout */
+  .next-up{
+    max-width:520px;
+    margin:0 auto;
+    border:1px solid var(--brass);
+    border-radius:6px;
+    background:rgba(176,141,87,0.08);
+    padding:18px 24px;
+    text-align:left;
+    position:relative;
+  }
+  .next-up::before{
+    content:"下一站";
+    position:absolute;
+    top:-11px;
+    left:20px;
+    background:var(--ink-900);
+    padding:0 10px;
+    font-size:11px;
+    letter-spacing:0.2em;
+    color:var(--brass);
+    font-family:'JetBrains Mono',monospace;
+  }
+  .next-up .nu-title{
+    font-family:'Noto Serif TC',serif;
+    font-weight:700;
+    font-size:19px;
+    color:var(--paper-100);
+    margin-bottom:6px;
+  }
+  .next-up .nu-meta{
+    font-size:13px;
+    color:var(--paper-200);
+  }
+  .next-up .nu-days{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--brass);
+    font-size:12px;
+    margin-top:8px;
+  }
+  .next-up.empty{
+    color:var(--ink-600);
+    font-size:13px;
+    text-align:center;
+    border-style:dashed;
+  }
+  .next-up.empty a{
+    color:var(--brass);
+    text-decoration:underline;
+  }
   .hero-meta{
-    margin-top:28px;
+    margin-top:22px;
     font-size:12px;
     color:var(--ink-600);
   }
@@ -120,6 +180,13 @@
     background:var(--paper-100);
     color:var(--ink-900);
     padding:40px 24px 8px;
+  }
+  .stats-caption{
+    max-width:1100px;
+    margin:0 auto 18px;
+    font-size:12px;
+    color:var(--ink-700);
+    font-family:'JetBrains Mono',monospace;
   }
   .stats-grid{
     max-width:1100px;
@@ -223,6 +290,10 @@
     overflow:hidden;
     box-shadow:0 1px 0 rgba(0,0,0,0.03);
   }
+  .card.pending{
+    border-style:dashed;
+    border-color:var(--brass);
+  }
   @media (max-width:640px){
     .card{grid-template-columns:88px 1fr;}
     .card .card-img{display:none;}
@@ -237,6 +308,11 @@
     padding:14px 6px;
     position:relative;
   }
+  .card-date.pending{
+    background:transparent;
+    color:var(--ink-900);
+    border-right:2px dashed var(--brass);
+  }
   .card-date::after{
     content:"";
     position:absolute;
@@ -246,8 +322,10 @@
     background-size:18px 18px;
     background-position:center;
   }
+  .card-date.pending::after{ background-image:radial-gradient(circle, #FBF7EC 4px, transparent 4.5px); }
   .card-date .day{font-family:'Noto Serif TC',serif;font-weight:900;font-size:28px;line-height:1;}
   .card-date .my{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:6px;letter-spacing:0.05em;color:var(--brass);}
+  .card-date.pending .my{color:var(--ink-700);}
   .card-body{
     padding:16px 22px 16px 26px;
     display:flex;
@@ -267,9 +345,9 @@
     color:var(--ink-700);
   }
   .card-sub .dot{margin:0 6px;color:var(--paper-300);}
+  .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
   .badge{
     display:inline-block;
-    margin-top:6px;
     padding:4px 10px;
     font-size:11px;
     letter-spacing:0.08em;
@@ -283,6 +361,31 @@
   .badge.type-沉浸式體驗{background:var(--teal);}
   .badge.type-實境解謎{background:var(--amber);}
   .badge.type-default{background:var(--gray);}
+  .badge.pending-badge{
+    background:transparent;
+    border:1.5px dashed var(--brass);
+    color:var(--brass);
+    transform:rotate(2deg);
+  }
+
+  .note-block{
+    margin-top:8px;
+    font-size:12.5px;
+    color:var(--ink-700);
+    line-height:1.7;
+    background:var(--paper-100);
+    border-left:2px solid var(--paper-300);
+    padding:8px 12px;
+    border-radius:2px;
+  }
+  .note-block.empty{
+    color:var(--ink-600);
+    font-style:italic;
+  }
+  .note-block a{
+    color:var(--brass);
+    text-decoration:underline;
+  }
 
   .card-img{
     background:var(--paper-200);
@@ -293,41 +396,6 @@
   }
   .card-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .card-img svg{width:38px;height:38px;opacity:0.35;}
-
-  .note-toggle{
-    margin-top:8px;
-    font-size:12px;
-    color:var(--brass);
-    cursor:pointer;
-    width:fit-content;
-    font-family:'JetBrains Mono',monospace;
-    border-bottom:1px dashed var(--brass);
-    padding-bottom:1px;
-  }
-  .note-area{
-    display:none;
-    margin-top:8px;
-  }
-  .note-area.open{display:block;}
-  .note-area textarea{
-    width:100%;
-    min-height:64px;
-    resize:vertical;
-    border:1px solid var(--paper-300);
-    background:#fff;
-    padding:10px 12px;
-    font-family:'Noto Sans TC',sans-serif;
-    font-size:13px;
-    color:var(--ink-900);
-    border-radius:3px;
-  }
-  .note-status{
-    font-size:11px;
-    color:var(--ink-600);
-    margin-top:4px;
-    font-family:'JetBrains Mono',monospace;
-    height:14px;
-  }
 
   .state-msg{
     max-width:600px;
@@ -358,24 +426,34 @@
     font-family:'JetBrains Mono',monospace;
     background:var(--paper-100);
   }
+  footer a{color:var(--brass);}
 </style>
 </head>
 <body>
 
 <section class="hero">
-  <div class="eyebrow">TAIWAN ESCAPE ROOM LOG</div>
+  <div class="eyebrow">TAIWAN GAME LOG</div>
   <h1 class="serif">遊戲通關護照</h1>
-  <p class="sub">每一場密室、LARP、沉浸式體驗與實境解謎，都是護照上的一枚戳章。這裡自動同步你的 Google Sheet 紀錄。</p>
+  <p class="sub">每一場密室、LARP、沉浸式體驗與實境解謎，都是護照上的一枚戳章。</p>
+
   <div class="stamp-row">
     <div class="stamp-count">
       <div class="num mono" id="stat-total">--</div>
-      <div class="label serif">總通關數</div>
+      <div class="label serif">已通關</div>
+    </div>
+    <div class="stamp-count pending">
+      <div class="num mono" id="stat-pending">--</div>
+      <div class="label serif">已預訂</div>
     </div>
   </div>
+
+  <div id="next-up-wrap"></div>
+
   <div class="hero-meta">資料同步於 <span class="mono" id="sync-time">--</span></div>
 </section>
 
 <section class="stats-wrap">
+  <div class="stats-caption">※ 以下統計僅計入「已通關」場次</div>
   <div class="stats-grid">
     <div class="stat-card">
       <h3>類型分布</h3>
@@ -393,6 +471,11 @@
 
   <div class="controls">
     <input type="text" id="search" placeholder="搜尋主題或工作室…">
+    <select id="filter-status">
+      <option value="">全部狀態</option>
+      <option value="cleared">已通關</option>
+      <option value="pending">已預定</option>
+    </select>
     <select id="filter-city"><option value="">全部縣市</option></select>
     <select id="filter-type"><option value="">全部類型</option></select>
     <select id="filter-studio"><option value="">全部工作室</option></select>
@@ -406,15 +489,17 @@
 </section>
 
 <footer>
-  資料來源：Google Sheet（自動同步）— 心得筆記儲存於本機瀏覽器<br>
-  DESIGN — 遊戲通關護照 v1
+  資料來源：Google Sheet（自動同步，含心得筆記）<br>
+  <a id="sheet-link" href="#" target="_blank" rel="noopener">前往 Google Sheet 編輯資料 →</a><br>
+  DESIGN — 遊戲通關護照 v2
 </footer>
 
 <script>
 /* ====== 設定：你的 Google Sheet ====== */
 const SHEET_ID = "1YrMVUN0sHSPw4P9sVtHuL298OV_YRNAtWAh_L3mOTug";
-const GID = "0"; // 第一個工作表分頁
+const GID = "0";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+document.getElementById("sheet-link").href = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
 
 const TYPE_COLORS = {
   "密室": "#24344A",
@@ -424,7 +509,10 @@ const TYPE_COLORS = {
 };
 
 let RAW = [];
-let state = { search:"", city:"", type:"", studio:"", sortDesc:true };
+let TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+
+let state = { search:"", city:"", type:"", studio:"", status:"", sortDesc:true };
 
 const el = id => document.getElementById(id);
 
@@ -441,12 +529,26 @@ function fmtDate(dateObj, raw){
   return { day: String(dateObj.getDate()).padStart(2,"0"), my: MONTHS[dateObj.getMonth()]+" "+dateObj.getFullYear() };
 }
 
-function noteKey(row){
-  return "eroom_note::" + row["日期"] + "::" + row["主題"];
-}
-
 function placeholderSVG(){
   return `<svg viewBox="0 0 24 24" fill="none" stroke="#3A4552" stroke-width="1.5"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>`;
+}
+
+function renderNextUp(){
+  const upcoming = RAW.filter(r=>r._status==="pending" && r._date).sort((a,b)=>a._date-b._date);
+  const wrap = el("next-up-wrap");
+  if(upcoming.length===0){
+    wrap.innerHTML = `<div class="next-up empty">目前沒有排定的下一場冒險 · <a id="sheet-link-2" href="${document.getElementById("sheet-link").href}" target="_blank">到 Google Sheet 新增預約</a></div>`;
+    return;
+  }
+  const r = upcoming[0];
+  const days = Math.ceil((r._date - TODAY)/86400000);
+  const dayLabel = days===0 ? "就是今天" : (days>0 ? `還有 ${days} 天` : "已錯過安排日期，請確認");
+  wrap.innerHTML = `
+    <div class="next-up">
+      <div class="nu-title serif">${escapeHtml(r["主題"]||"")}</div>
+      <div class="nu-meta">${escapeHtml(r["日期"]||"")}　·　${escapeHtml(r["縣市"]||"")}　·　${escapeHtml(r["工作室"]||"")}</div>
+      <div class="nu-days">${dayLabel}</div>
+    </div>`;
 }
 
 function render(){
@@ -454,6 +556,7 @@ function render(){
     if(state.city && r["縣市"]!==state.city) return false;
     if(state.type && r["類型"]!==state.type) return false;
     if(state.studio && r["工作室"]!==state.studio) return false;
+    if(state.status && r._status!==state.status) return false;
     if(state.search){
       const q = state.search.toLowerCase();
       const hay = ((r["主題"]||"")+" "+(r["工作室"]||"")).toLowerCase();
@@ -476,53 +579,33 @@ function render(){
     return;
   }
 
-  listEl.innerHTML = rows.map((r,i)=>{
+  listEl.innerHTML = rows.map((r)=>{
     const {day,my} = fmtDate(r._date, r["日期"]);
     const type = r["類型"] || "";
+    const isPending = r._status==="pending";
     const badgeClass = "type-"+(TYPE_COLORS[type] ? type : "default");
     const img = r["封面圖網址"];
-    const nkey = noteKey(r);
-    const savedNote = localStorage.getItem(nkey) || "";
+    const note = (r["心得筆記"]||"").trim();
     return `
-    <div class="card">
-      <div class="card-date">
+    <div class="card ${isPending?'pending':''}">
+      <div class="card-date ${isPending?'pending':''}">
         <div class="day mono">${day}</div>
         <div class="my mono">${my}</div>
       </div>
       <div class="card-body">
         <div class="card-title">${escapeHtml(r["主題"]||"（未命名）")}</div>
         <div class="card-sub">${escapeHtml(r["工作室"]||"")}<span class="dot">·</span>${escapeHtml(r["縣市"]||"")}</div>
-        ${type ? `<span class="badge ${badgeClass}">${escapeHtml(type)}</span>` : ""}
-        <div class="note-toggle" data-idx="${i}">${savedNote ? "✎ 查看／編輯心得" : "+ 記錄心得"}</div>
-        <div class="note-area" id="note-${i}">
-          <textarea placeholder="玩後感、關鍵提示、想再刷一次的理由…" data-key="${nkey}">${escapeHtml(savedNote)}</textarea>
-          <div class="note-status" id="note-status-${i}"></div>
+        <div class="badge-row">
+          ${type ? `<span class="badge ${badgeClass}">${escapeHtml(type)}</span>` : ""}
+          ${isPending ? `<span class="badge pending-badge">尚未挑戰</span>` : ""}
         </div>
+        <div class="note-block ${note?'':'empty'}">${note ? escapeHtml(note) : "尚未留下心得"}</div>
       </div>
       <div class="card-img">
         ${img ? `<img src="${escapeAttr(img)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${placeholderSVG().replace(/'/g,"\\'")}'">` : placeholderSVG()}
       </div>
     </div>`;
   }).join("");
-
-  listEl.querySelectorAll(".note-toggle").forEach(t=>{
-    t.addEventListener("click", ()=>{
-      const idx = t.dataset.idx;
-      el("note-"+idx).classList.toggle("open");
-    });
-  });
-  listEl.querySelectorAll(".note-area textarea").forEach((ta,idx)=>{
-    let timer;
-    ta.addEventListener("input", ()=>{
-      clearTimeout(timer);
-      const statusEl = el("note-status-"+idx);
-      statusEl.textContent = "儲存中…";
-      timer = setTimeout(()=>{
-        localStorage.setItem(ta.dataset.key, ta.value);
-        statusEl.textContent = "已儲存於本機瀏覽器 ✓";
-      }, 500);
-    });
-  });
 }
 
 function escapeHtml(s){
@@ -548,11 +631,12 @@ function populateFilters(){
 }
 
 function renderStats(){
-  el("stat-total").textContent = RAW.length;
+  const cleared = RAW.filter(r=>r._status==="cleared");
+  el("stat-total").textContent = cleared.length;
+  el("stat-pending").textContent = RAW.filter(r=>r._status==="pending").length;
 
-  // 類型 donut
   const typeCounts = {};
-  RAW.forEach(r=>{ const t=r["類型"]||"其他"; typeCounts[t]=(typeCounts[t]||0)+1; });
+  cleared.forEach(r=>{ const t=r["類型"]||"其他"; typeCounts[t]=(typeCounts[t]||0)+1; });
   new Chart(el("chart-type"), {
     type:"doughnut",
     data:{
@@ -570,10 +654,9 @@ function renderStats(){
     }
   });
 
-  // 縣市 bars
   const cityCounts = {};
-  RAW.forEach(r=>{ const c=r["縣市"]||"其他"; cityCounts[c]=(cityCounts[c]||0)+1; });
-  const maxC = Math.max(...Object.values(cityCounts));
+  cleared.forEach(r=>{ const c=r["縣市"]||"其他"; cityCounts[c]=(cityCounts[c]||0)+1; });
+  const maxC = Math.max(1, ...Object.values(cityCounts));
   const sortedCities = Object.entries(cityCounts).sort((a,b)=>b[1]-a[1]);
   el("city-bars").innerHTML = sortedCities.map(([city,count])=>`
     <li>
@@ -582,9 +665,8 @@ function renderStats(){
       <span class="bval">${count}</span>
     </li>`).join("");
 
-  // 每年場次
   const yearCounts = {};
-  RAW.forEach(r=>{
+  cleared.forEach(r=>{
     if(!r._date) return;
     const y = r._date.getFullYear();
     yearCounts[y] = (yearCounts[y]||0)+1;
@@ -611,6 +693,7 @@ function attachControls(){
   el("filter-city").addEventListener("change", e=>{ state.city=e.target.value; render(); });
   el("filter-type").addEventListener("change", e=>{ state.type=e.target.value; render(); });
   el("filter-studio").addEventListener("change", e=>{ state.studio=e.target.value; render(); });
+  el("filter-status").addEventListener("change", e=>{ state.status=e.target.value; render(); });
   el("sort-btn").addEventListener("click", ()=>{
     state.sortDesc = !state.sortDesc;
     el("sort-btn").textContent = state.sortDesc ? "由新到舊 ↓" : "由舊到新 ↑";
@@ -627,10 +710,14 @@ async function load(){
     const parsed = Papa.parse(csvText, { header:true, skipEmptyLines:true });
     RAW = parsed.data
       .filter(r=>r["主題"] && r["主題"].trim()!=="")
-      .map(r=>({...r, _date: parseDate(r["日期"])}));
+      .map(r=>{
+        const d = parseDate(r["日期"]);
+        return {...r, _date:d, _status: (d && d>TODAY) ? "pending" : "cleared"};
+      });
 
     el("sync-time").textContent = new Date().toLocaleString("zh-TW", {hour12:false});
     populateFilters();
+    renderNextUp();
     renderStats();
     attachControls();
     render();
