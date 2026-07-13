@@ -379,15 +379,11 @@
     border-left:2px solid var(--paper-300);
     padding:6px 12px;
     border-radius:2px;
-    white-space:pre-line;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
+    white-space:normal;
     overflow:hidden;
   }
   .note-block.expanded{
-    -webkit-line-clamp:unset;
-    display:block;
+    white-space:pre-line;
   }
   .note-toggle{
     align-self:flex-start;
@@ -604,7 +600,8 @@ function render(){
     const badgeClass = "type-"+(TYPE_COLORS[type] ? type : "default");
     const img = r["封面圖網址"];
     const note = (r["心得筆記"]||"").trim();
-    const needsToggle = note && (note.includes("\n") || note.length>40);
+    const needsToggle = note && (note.includes("\n") || note.length>50);
+    const preview = note ? makePreview(note) : "";
     return `
     <div class="card ${isPending?'pending':''}" id="card-${i}">
       <div class="card-date ${isPending?'pending':''}">
@@ -618,7 +615,7 @@ function render(){
           ${type ? `<span class="badge ${badgeClass}">${escapeHtml(type)}</span>` : ""}
         </div>
         ${isPending ? `<span class="pending-tag">即將挑戰</span>` : ""}
-        ${note ? `<div class="note-block" id="note-${i}">${escapeHtml(note)}</div>` : ""}
+        ${note ? `<div class="note-block" id="note-${i}" data-full="${escapeAttr(note)}">${escapeHtml(preview)}</div>` : ""}
         ${needsToggle ? `<button class="note-toggle" data-idx="${i}">展開</button>` : ""}
       </div>
       <div class="card-img">
@@ -634,11 +631,16 @@ function render(){
       const cardEl = el("card-"+idx);
       const expanded = noteEl.classList.toggle("expanded");
       cardEl.classList.toggle("expanded", expanded);
+      noteEl.textContent = expanded ? noteEl.dataset.full : makePreview(noteEl.dataset.full);
       btn.textContent = expanded ? "收合" : "展開";
     });
   });
 }
 
+function makePreview(note){
+  const oneLine = note.replace(/\n+/g," ").trim();
+  return oneLine.length>50 ? oneLine.slice(0,50)+"…" : oneLine;
+}
 function escapeHtml(s){
   return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 }
