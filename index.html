@@ -129,8 +129,7 @@
     text-align:left;
     position:relative;
   }
-  .next-up::before{
-    content:"下一站";
+  .next-up .nu-tag{
     position:absolute;
     top:-11px;
     left:20px;
@@ -151,12 +150,6 @@
   .next-up .nu-meta{
     font-size:13px;
     color:var(--paper-200);
-  }
-  .next-up .nu-days{
-    font-family:'JetBrains Mono',monospace;
-    color:var(--brass);
-    font-size:12px;
-    margin-top:8px;
   }
   .next-up.empty{
     color:var(--ink-600);
@@ -386,11 +379,30 @@
     border-left:2px solid var(--paper-300);
     padding:6px 12px;
     border-radius:2px;
+    white-space:pre-line;
     display:-webkit-box;
     -webkit-line-clamp:2;
     -webkit-box-orient:vertical;
     overflow:hidden;
   }
+  .note-block.expanded{
+    -webkit-line-clamp:unset;
+    display:block;
+  }
+  .note-toggle{
+    align-self:flex-start;
+    margin:2px 0 0;
+    padding:0;
+    border:none;
+    background:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--brass);
+    text-decoration:underline;
+    cursor:pointer;
+  }
+  .card.expanded{ height:auto; }
+  .card.expanded .card-body{ overflow:visible; }
 
   .card-img{
     background:var(--paper-200);
@@ -543,17 +555,17 @@ function renderNextUp(){
   const upcoming = RAW.filter(r=>r._status==="pending" && r._date).sort((a,b)=>a._date-b._date);
   const wrap = el("next-up-wrap");
   if(upcoming.length===0){
-    wrap.innerHTML = `<div class="next-up empty">目前沒有排定的下一場冒險 · <a id="sheet-link-2" href="${document.getElementById("sheet-link").href}" target="_blank">到 Google Sheet 新增預約</a></div>`;
+    wrap.innerHTML = `<div class="next-up empty">還沒有排定下一場冒險，好手癢，趕快訂一場密室吧！ · <a href="${document.getElementById("sheet-link").href}" target="_blank">到 Google Sheet 新增預約</a></div>`;
     return;
   }
   const r = upcoming[0];
   const days = Math.ceil((r._date - TODAY)/86400000);
-  const dayLabel = days===0 ? "就是今天" : (days>0 ? `還有 ${days} 天` : "已錯過安排日期，請確認");
+  const tag = days===0 ? "就是今天" : (days>0 ? `${days} 天後` : "已錯過安排日期");
   wrap.innerHTML = `
     <div class="next-up">
+      <div class="nu-tag">${tag}</div>
       <div class="nu-title serif">${escapeHtml(r["主題"]||"")}</div>
       <div class="nu-meta">${escapeHtml(r["日期"]||"")}　·　${escapeHtml(r["縣市"]||"")}　·　${escapeHtml(r["工作室"]||"")}</div>
-      <div class="nu-days">${dayLabel}</div>
     </div>`;
 }
 
@@ -585,15 +597,16 @@ function render(){
     return;
   }
 
-  listEl.innerHTML = rows.map((r)=>{
+  listEl.innerHTML = rows.map((r,i)=>{
     const {day,my} = fmtDate(r._date, r["日期"]);
     const type = r["類型"] || "";
     const isPending = r._status==="pending";
     const badgeClass = "type-"+(TYPE_COLORS[type] ? type : "default");
     const img = r["封面圖網址"];
     const note = (r["心得筆記"]||"").trim();
+    const needsToggle = note && (note.includes("\n") || note.length>40);
     return `
-    <div class="card ${isPending?'pending':''}">
+    <div class="card ${isPending?'pending':''}" id="card-${i}">
       <div class="card-date ${isPending?'pending':''}">
         <div class="day mono">${day}</div>
         <div class="my mono">${my}</div>
@@ -605,13 +618,25 @@ function render(){
           ${type ? `<span class="badge ${badgeClass}">${escapeHtml(type)}</span>` : ""}
         </div>
         ${isPending ? `<span class="pending-tag">即將挑戰</span>` : ""}
-        ${note ? `<div class="note-block">${escapeHtml(note)}</div>` : ""}
+        ${note ? `<div class="note-block" id="note-${i}">${escapeHtml(note)}</div>` : ""}
+        ${needsToggle ? `<button class="note-toggle" data-idx="${i}">展開</button>` : ""}
       </div>
       <div class="card-img">
         ${img ? `<img src="${escapeAttr(img)}" alt="" loading="lazy" onerror="handleImgError(this)">` : placeholderSVG()}
       </div>
     </div>`;
   }).join("");
+
+  listEl.querySelectorAll(".note-toggle").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const idx = btn.dataset.idx;
+      const noteEl = el("note-"+idx);
+      const cardEl = el("card-"+idx);
+      const expanded = noteEl.classList.toggle("expanded");
+      cardEl.classList.toggle("expanded", expanded);
+      btn.textContent = expanded ? "收合" : "展開";
+    });
+  });
 }
 
 function escapeHtml(s){
