@@ -37,7 +37,6 @@
   .mono{font-family:'JetBrains Mono',monospace;}
   .serif{font-family:'Noto Serif TC',serif;}
   a{color:inherit;}
-
   /* ---------- HERO ---------- */
   .hero{
     position:relative;
@@ -117,7 +116,6 @@
     letter-spacing:0.18em;
     margin-top:6px;
   }
-
   /* 下一站 callout */
   .next-up{
     max-width:520px;
@@ -167,7 +165,6 @@
     color:var(--ink-600);
   }
   .hero-meta .mono{color:var(--brass);}
-
   /* ---------- STATS ---------- */
   .stats-wrap{
     background:var(--paper-100);
@@ -209,7 +206,6 @@
   .bar-list .btrack{flex:1;height:8px;background:var(--paper-300);border-radius:4px;overflow:hidden;}
   .bar-list .bfill{height:100%;background:var(--navy);}
   .bar-list .bval{width:24px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-700);}
-
   /* ---------- CONTROLS ---------- */
   .controls{
     max-width:1100px;
@@ -259,7 +255,6 @@
     color:var(--ink-700);
     font-family:'JetBrains Mono',monospace;
   }
-
   /* ---------- LIST ---------- */
   .list-wrap{
     background:var(--paper-100);
@@ -370,7 +365,6 @@
     transform:rotate(4deg);
     z-index:2;
   }
-
   .note-block{
     font-size:12.5px;
     color:var(--ink-700);
@@ -388,18 +382,21 @@
   .note-toggle{
     align-self:flex-start;
     margin:2px 0 0;
-    padding:0;
-    border:none;
+    padding:0 2px;
+    border:1px solid var(--paper-300);
+    border-radius:3px;
     background:none;
     font-family:'JetBrains Mono',monospace;
-    font-size:11px;
+    font-size:12px;
+    line-height:16px;
+    width:18px;
+    height:18px;
+    text-align:center;
     color:var(--brass);
-    text-decoration:underline;
     cursor:pointer;
   }
   .card.expanded{ height:auto; }
   .card.expanded .card-body{ overflow:visible; }
-
   .card-img{
     background:var(--paper-200);
     display:flex;
@@ -411,7 +408,6 @@
   }
   .card-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .card-img svg{width:32px;height:32px;opacity:0.35;}
-
   .state-msg{
     max-width:600px;
     margin:60px auto;
@@ -432,7 +428,6 @@
     cursor:pointer;
     font-size:13px;
   }
-
   footer{
     text-align:center;
     padding:26px 20px 40px;
@@ -445,24 +440,19 @@
 </style>
 </head>
 <body>
-
 <section class="hero">
   <div class="eyebrow">TAIWAN GAME LOG</div>
   <h1 class="serif">遊戲通關護照</h1>
   <p class="sub">每一場密室、LARP、沉浸式體驗與實境解謎，都是護照上的一枚戳章。</p>
-
   <div class="stamp-row">
     <div class="stamp-count">
       <div class="num mono" id="stat-total">--</div>
       <div class="label serif">已通關</div>
     </div>
   </div>
-
   <div id="next-up-wrap"></div>
-
   <div class="hero-meta">資料同步於 <span class="mono" id="sync-time">--</span></div>
 </section>
-
 <section class="stats-wrap">
   <div class="stats-caption">※ 以下統計僅計入「已通關」場次</div>
   <div class="stats-grid">
@@ -479,7 +469,6 @@
       <canvas id="chart-year"></canvas>
     </div>
   </div>
-
   <div class="controls">
     <input type="text" id="search" placeholder="搜尋主題或工作室…">
     <select id="filter-status">
@@ -494,39 +483,31 @@
   </div>
   <div class="result-count" id="result-count"></div>
 </section>
-
 <section class="list-wrap">
   <div class="list" id="list"></div>
 </section>
-
 <footer>
   資料來源：Google Sheet（自動同步，含心得筆記）<br>
   <a id="sheet-link" href="#" target="_blank" rel="noopener">前往 Google Sheet 編輯資料 →</a><br>
   DESIGN — 遊戲通關護照 v2
 </footer>
-
 <script>
 /* ====== 設定：你的 Google Sheet ====== */
 const SHEET_ID = "1YrMVUN0sHSPw4P9sVtHuL298OV_YRNAtWAh_L3mOTug";
 const GID = "0";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 document.getElementById("sheet-link").href = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
-
 const TYPE_COLORS = {
   "密室": "#24344A",
   "LARP": "#6B4C6E",
   "沉浸式體驗": "#1F5C56",
   "實境解謎": "#8A5A22"
 };
-
 let RAW = [];
 let TODAY = new Date();
 TODAY.setHours(0,0,0,0);
-
 let state = { search:"", city:"", type:"", studio:"", status:"", sortDesc:true };
-
 const el = id => document.getElementById(id);
-
 function parseDate(str){
   if(!str) return null;
   const parts = str.split("/").map(s=>parseInt(s,10));
@@ -539,14 +520,12 @@ function fmtDate(dateObj, raw){
   const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   return { day: String(dateObj.getDate()).padStart(2,"0"), my: MONTHS[dateObj.getMonth()]+" "+dateObj.getFullYear() };
 }
-
 function placeholderSVG(){
   return `<svg viewBox="0 0 24 24" fill="none" stroke="#3A4552" stroke-width="1.5"><rect x="5" y="10" width="14" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>`;
 }
 function handleImgError(imgEl){
   imgEl.parentElement.innerHTML = placeholderSVG();
 }
-
 function renderNextUp(){
   const upcoming = RAW.filter(r=>r._status==="pending" && r._date).sort((a,b)=>a._date-b._date);
   const wrap = el("next-up-wrap");
@@ -564,7 +543,6 @@ function renderNextUp(){
       <div class="nu-meta">${escapeHtml(r["日期"]||"")}　·　${escapeHtml(r["縣市"]||"")}　·　${escapeHtml(r["工作室"]||"")}</div>
     </div>`;
 }
-
 function render(){
   let rows = RAW.filter(r=>{
     if(state.city && r["縣市"]!==state.city) return false;
@@ -578,21 +556,17 @@ function render(){
     }
     return true;
   });
-
   rows.sort((a,b)=>{
     const da = a._date ? a._date.getTime() : 0;
     const db = b._date ? b._date.getTime() : 0;
     return state.sortDesc ? db-da : da-db;
   });
-
   el("result-count").textContent = `顯示 ${rows.length} / ${RAW.length} 筆紀錄`;
-
   const listEl = el("list");
   if(rows.length===0){
     listEl.innerHTML = `<div class="state-msg"><span class="big">查無符合的檔案</span>試試調整搜尋條件或篩選項目。</div>`;
     return;
   }
-
   listEl.innerHTML = rows.map((r,i)=>{
     const {day,my} = fmtDate(r._date, r["日期"]);
     const type = r["類型"] || "";
@@ -616,14 +590,13 @@ function render(){
         </div>
         ${isPending ? `<span class="pending-tag">即將挑戰</span>` : ""}
         ${note ? `<div class="note-block" id="note-${i}" data-full="${escapeAttr(note)}">${escapeHtml(preview)}</div>` : ""}
-        ${needsToggle ? `<button class="note-toggle" data-idx="${i}">展開</button>` : ""}
+        ${needsToggle ? `<button class="note-toggle" data-idx="${i}">+</button>` : ""}
       </div>
       <div class="card-img">
         ${img ? `<img src="${escapeAttr(img)}" alt="" loading="lazy" onerror="handleImgError(this)">` : placeholderSVG()}
       </div>
     </div>`;
   }).join("");
-
   listEl.querySelectorAll(".note-toggle").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const idx = btn.dataset.idx;
@@ -632,11 +605,10 @@ function render(){
       const expanded = noteEl.classList.toggle("expanded");
       cardEl.classList.toggle("expanded", expanded);
       noteEl.textContent = expanded ? noteEl.dataset.full : makePreview(noteEl.dataset.full);
-      btn.textContent = expanded ? "收合" : "展開";
+      btn.textContent = expanded ? "－" : "+";
     });
   });
 }
-
 function makePreview(note){
   const oneLine = note.replace(/\n+/g," ").trim();
   return oneLine.length>50 ? oneLine.slice(0,50)+"…" : oneLine;
@@ -645,7 +617,6 @@ function escapeHtml(s){
   return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 }
 function escapeAttr(s){ return escapeHtml(s); }
-
 function populateFilters(){
   const cities = [...new Set(RAW.map(r=>r["縣市"]).filter(Boolean))].sort();
   const types = [...new Set(RAW.map(r=>r["類型"]).filter(Boolean))].sort();
@@ -662,11 +633,9 @@ function populateFilters(){
   fill("filter-type", types);
   fill("filter-studio", studios);
 }
-
 function renderStats(){
   const cleared = RAW.filter(r=>r._status==="cleared");
   el("stat-total").textContent = cleared.length;
-
   const typeCounts = {};
   cleared.forEach(r=>{ const t=r["類型"]||"其他"; typeCounts[t]=(typeCounts[t]||0)+1; });
   new Chart(el("chart-type"), {
@@ -685,7 +654,6 @@ function renderStats(){
       cutout:"62%"
     }
   });
-
   const cityCounts = {};
   cleared.forEach(r=>{ const c=r["縣市"]||"其他"; cityCounts[c]=(cityCounts[c]||0)+1; });
   const maxC = Math.max(1, ...Object.values(cityCounts));
@@ -696,7 +664,6 @@ function renderStats(){
       <span class="btrack"><span class="bfill" style="width:${(count/maxC*100).toFixed(0)}%"></span></span>
       <span class="bval">${count}</span>
     </li>`).join("");
-
   const yearCounts = {};
   cleared.forEach(r=>{
     if(!r._date) return;
@@ -719,7 +686,6 @@ function renderStats(){
     }
   });
 }
-
 function attachControls(){
   el("search").addEventListener("input", e=>{ state.search=e.target.value; render(); });
   el("filter-city").addEventListener("change", e=>{ state.city=e.target.value; render(); });
@@ -732,7 +698,6 @@ function attachControls(){
     render();
   });
 }
-
 async function load(){
   el("list").innerHTML = `<div class="state-msg"><span class="big">正在查閱檔案庫…</span>連線至 Google Sheet 中</div>`;
   try{
@@ -746,7 +711,6 @@ async function load(){
         const d = parseDate(r["日期"]);
         return {...r, _date:d, _status: (d && d>TODAY) ? "pending" : "cleared"};
       });
-
     el("sync-time").textContent = new Date().toLocaleString("zh-TW", {hour12:false});
     populateFilters();
     renderNextUp();
@@ -762,7 +726,6 @@ async function load(){
     </div>`;
   }
 }
-
 load();
 </script>
 </body>
