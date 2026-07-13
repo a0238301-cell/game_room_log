@@ -361,11 +361,19 @@
   .badge.type-沉浸式體驗{background:var(--teal);}
   .badge.type-實境解謎{background:var(--amber);}
   .badge.type-default{background:var(--gray);}
-  .badge.pending-badge{
-    background:transparent;
+  .pending-tag{
+    position:absolute;
+    top:12px;
+    right:12px;
+    padding:4px 11px;
+    font-size:11px;
+    letter-spacing:0.08em;
     border:1.5px dashed var(--brass);
+    border-radius:3px;
     color:var(--brass);
-    transform:rotate(2deg);
+    background:rgba(243,236,218,0.9);
+    transform:rotate(4deg);
+    z-index:2;
   }
 
   .note-block{
@@ -434,16 +442,12 @@
 <section class="hero">
   <div class="eyebrow">TAIWAN GAME LOG</div>
   <h1 class="serif">遊戲通關護照</h1>
-  <p class="sub">每一場密室、LARP、沉浸式體驗與實境解謎，都是護照上的一枚戳章。</p>
+  <p class="sub">每一場密室、LARP、沉浸式體驗與實境解謎，都是護照上的一枚戳章。這裡自動同步你的 Google Sheet 紀錄。</p>
 
   <div class="stamp-row">
     <div class="stamp-count">
       <div class="num mono" id="stat-total">--</div>
       <div class="label serif">已通關</div>
-    </div>
-    <div class="stamp-count pending">
-      <div class="num mono" id="stat-pending">--</div>
-      <div class="label serif">已預訂</div>
     </div>
   </div>
 
@@ -474,7 +478,7 @@
     <select id="filter-status">
       <option value="">全部狀態</option>
       <option value="cleared">已通關</option>
-      <option value="pending">已預定</option>
+      <option value="pending">預定中</option>
     </select>
     <select id="filter-city"><option value="">全部縣市</option></select>
     <select id="filter-type"><option value="">全部類型</option></select>
@@ -597,9 +601,9 @@ function render(){
         <div class="card-sub">${escapeHtml(r["工作室"]||"")}<span class="dot">·</span>${escapeHtml(r["縣市"]||"")}</div>
         <div class="badge-row">
           ${type ? `<span class="badge ${badgeClass}">${escapeHtml(type)}</span>` : ""}
-          ${isPending ? `<span class="badge pending-badge">尚未挑戰</span>` : ""}
         </div>
-        <div class="note-block ${note?'':'empty'}">${note ? escapeHtml(note) : "尚未留下心得"}</div>
+        ${isPending ? `<span class="pending-tag">即將挑戰</span>` : ""}
+        ${note ? `<div class="note-block">${escapeHtml(note)}</div>` : ""}
       </div>
       <div class="card-img">
         ${img ? `<img src="${escapeAttr(img)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='${placeholderSVG().replace(/'/g,"\\'")}'">` : placeholderSVG()}
@@ -633,7 +637,6 @@ function populateFilters(){
 function renderStats(){
   const cleared = RAW.filter(r=>r._status==="cleared");
   el("stat-total").textContent = cleared.length;
-  el("stat-pending").textContent = RAW.filter(r=>r._status==="pending").length;
 
   const typeCounts = {};
   cleared.forEach(r=>{ const t=r["類型"]||"其他"; typeCounts[t]=(typeCounts[t]||0)+1; });
